@@ -1,0 +1,3 @@
+look_up=CODEBOOK'*CODEBOOK;
+K_third=2*(look_up(codeNIndex(2,1),list)+look_up(codeNIndex(3,1),list)+look_up(codeNIndex(4,1),list)+look_up(codeNIndex(2,1),codeNIndex(3,1))+look_up(codeNIndex(2,1),codeNIndex(4,1))+look_up(codeNIndex(3,1),codeNIndex(4,1)));
+see1=sum((Y(:,1)-W'*CODEBOOK*CODE).^2)+gama*sum((CODEBOOK*CODE-P'*XTrain(:,1)).^2)+miyou*;

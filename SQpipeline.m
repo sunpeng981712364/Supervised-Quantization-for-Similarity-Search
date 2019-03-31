@@ -1,30 +1,30 @@
 clc;clear;
 % profile on;
-distcomp.feature( 'LocalUseMpiexec', false );%%%%%%²¢ĞĞ¼ÆËã¿ªÆô
+distcomp.feature( 'LocalUseMpiexec', false );%%%%%%å¹¶è¡Œè®¡ç®—å¼€å¯
 load('cifar_10_gist.mat');XTrain=traindata';YLabel=traingnd';
-%%%%%%%Êı¾İ³õÊ¼»¯
+%%%%%%%æ•°æ®åˆå§‹åŒ–
 lamada=1;gama=0.01;miyou=0.1;
 R=256;%%%%%%
-M=4;%%%%%4¸öÃÜÂë±¾
-K=256;%%%Ã¿¸öÃÜÂë±¾ÖĞ256¸öÏòÁ¿
+M=4;%%%%%4ä¸ªå¯†ç æœ¬
+K=256;%%%æ¯ä¸ªå¯†ç æœ¬ä¸­256ä¸ªå‘é‡
 NITS=5;
-C=10;%%%Ò»¹²10¸ö±êÇ©
+C=10;%%%ä¸€å…±10ä¸ªæ ‡ç­¾
 e=0;%%%constant inter-dictionaryelement-product
-% %%%%%Ëæ»úÌôÑ¡4000¸öÑµÁ·Ñù±¾
+% %%%%%éšæœºæŒ‘é€‰4000ä¸ªè®­ç»ƒæ ·æœ¬
 % sampleidx=randsample(size(XTrain,2),4000);
 % XTrain=XTrain(:,sampleidx');
 % YLabel=YLabel(:,sampleidx');
-%%%%%%Êı¾İÔ¤´¦Àí
+%%%%%%æ•°æ®é¢„å¤„ç†
 N=size(XTrain,2);Y=zeros(C,N);W=randn(R,C);
 for i=1:N
     Y(YLabel(1,i)+1,i)=1;
 end
-%%%%%%PÍ¨¹ıPCA³õÊ¼»¯£¬CODEBOOKºÍCODEÍ¨¹ıPQ·½·¨³õÊ¼»¯
+%%%%%%Pé€šè¿‡PCAåˆå§‹åŒ–ï¼ŒCODEBOOKå’ŒCODEé€šè¿‡PQæ–¹æ³•åˆå§‹åŒ–
 [P,CODE,CODEBOOK]=initialize(XTrain,R,K,M);
 % load('initial.mat');
 
 for i=1:NITS
-    disp(['µü´ú´ÎÊı£º',num2str(i),]);
+    disp(['è¿­ä»£æ¬¡æ•°ï¼š',num2str(i),]);
     qerror(i,1)=objectfunval( XTrain, CODE, CODEBOOK ,P,Y,W,gama,miyou,lamada,e);
     W=WStep(CODEBOOK,CODE,lamada,Y,R);
     qerror(i,2)=objectfunval(XTrain, CODE, CODEBOOK ,P,Y,W,gama,miyou,lamada,e);
@@ -32,7 +32,7 @@ for i=1:NITS
     qerror(i,3)=objectfunval( XTrain, CODE, CODEBOOK ,P,Y,W,gama,miyou,lamada,e);
     e= eStep(CODEBOOK,CODE,M);
     qerror(i,4)=objectfunval( XTrain, CODE, CODEBOOK ,P,Y,W,gama,miyou,lamada,e);
-    %%%%%Í¨¹ımatÎÄ¼ş°Ñ²ÎÊı´«µİ¸øobjectiveF.mº¯Êı
+    %%%%%é€šè¿‡matæ–‡ä»¶æŠŠå‚æ•°ä¼ é€’ç»™objectiveF.må‡½æ•°
     save('parameterToCStep.mat', 'W','CODE','XTrain','Y','P','e','miyou','gama','R','K','lamada');
     CODEBOOK= CStep(CODEBOOK);
 %     delete('parameterToCStep.mat');
@@ -42,13 +42,13 @@ for i=1:NITS
     disp([num2str(qerror(i,1)),'  ',num2str(qerror(i,2)),'  ',num2str(qerror(i,3)),'  ',num2str(qerror(i,4)),'  ',num2str(qerror(i,5)),'  ',num2str(qerror(i,6))]);
 end
 save('all.mat');
-%%%%%´Ó²âÊÔ¼¯ÖĞÑ¡È¡NUM_TEST¸öÊı¾İ¼¯×ö²âÊÔ
+%%%%%ä»æµ‹è¯•é›†ä¸­é€‰å–NUM_TESTä¸ªæ•°æ®é›†åšæµ‹è¯•
 % NUM_TEST=1000;
 % test_idx =randsample(size(testdata,1),NUM_TEST);
 
 testgnd=testgnd+1;
 test_tran=P'*testdata';
-%%%%%¹¹Ôìlook-up±í
+%%%%%æ„é€ look-upè¡¨
 for i=1:NUM_TEST
     aa=repmat(test_tran(:,i),[1,K*M]);
     lookup_table(:,i)=sum((aa-CODEBOOK).^2)';
